@@ -1,15 +1,17 @@
 
 
 function love.load()
+    love.graphics.setDefaultFilter("nearest", "nearest")
     sb_base = love.graphics.newImage('tilesetCheckerboard.png')
 
+    love.window.setFullscreen(1, "desktop")
     sb = love.graphics.newSpriteBatch(sb_base, 256, 'static')
 
     scrWid = love.window.getWidth()
     scrHei = love.window.getHeight()
 
-    sqByWid = 96
-    sqByHei = 64
+    sqByWid = 32
+    sqByHei = 18
 
     sbWid = sb_base:getWidth()
     sbHei = sb_base:getHeight()
