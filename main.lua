@@ -31,7 +31,7 @@ function love.load()
     --x and y offset used for scrolling through the level
     xoffset = 0
     yoffset = 0
-    offsetIncr = 5
+    offsetIncr = 10
 
     sqWid = scrWid / sqByWid
     sqHei = scrHei / sqByHei
@@ -75,27 +75,29 @@ end
 
 
 function love.update()
-    if love.keyboard.isDown("a") then
-        xoffset = xoffset - offsetIncr
-    end
-    if love.keyboard.isDown("d") then
-        xoffset = xoffset + offsetIncr
-    end
-    if love.keyboard.isDown("w") then
-        yoffset = yoffset - offsetIncr
-    end
-    if love.keyboard.isDown("s") then
-        yoffset = yoffset + offsetIncr
+    if state == "lvl" then
+        if love.keyboard.isDown("a") then
+            xoffset = xoffset + offsetIncr
+        end
+        if love.keyboard.isDown("d") then
+            xoffset = xoffset - offsetIncr
+        end
+        if love.keyboard.isDown("w") then
+            yoffset = yoffset + offsetIncr
+        end
+        if love.keyboard.isDown("s") then
+            yoffset = yoffset - offsetIncr
+        end
     end
 end
 
 
 function handleTextBoxInput(key)
-    if key == "escape" then --return failure
+    if key == "escape" then --cancel and ignore typed value
         setState("lvl")
-    elseif key == "return" then --return success
+    elseif key == "return" then
         setState("lvl")
-        _G[inpVar] = inpStr
+        _G[inpVar] = inpStr --set inpVar to equal inpStr
         if inpVar == "lvlWid" or inpVar == "lvlHei" then
             updateTileIndexes()
         end
@@ -124,10 +126,15 @@ end
 
 
 function love.draw()
+    --every tile is drawn, but translate the
+    --viewport so that only the desired tiles
+    --are seen.
     love.graphics.translate(xoffset, yoffset)
     
     
     --draw every tile
+    --TODO: draw only tiles able to be seen to save
+    --cpu cycles and allow for much larger levels.
     love.graphics.push()
     love.graphics.scale(scrWid/128/sqByWid, scrHei/128/sqByHei)
     for x = 0, lvlWid do
